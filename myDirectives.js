@@ -19,3 +19,34 @@ app.directive('pending', function () {
     }
   }
 });
+
+app.directive('notify', function () {
+  return {
+    restrict: 'A',
+    scope: {
+      title: '=',
+      body: '=',
+      icon: '='
+    },
+    link: function ($scope, $element, $attributes) {
+
+      var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+
+      var displayNotification = function (title, body, icon) {
+        new Notification(title, {body: body, icon: icon});
+      };
+
+      Notification.requestPermission(function (permission) {
+
+        if (permission === 'granted') {
+          $element.click(function () {
+            displayNotification($scope.title, $scope.body, $scope.icon);
+          })
+        }
+
+
+      });
+    }
+
+  }
+});
